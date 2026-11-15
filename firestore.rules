@@ -1,0 +1,61 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{db}/documents {
+    function signed() { return request.auth != null; }
+    function uid() { return request.auth.uid; }
+    function isAdmin() {
+      return signed() && request.auth.token.email_verified == true
+        && exists(/databases/$(db)/documents/admins/$(request.auth.token.email));
+    }
+    function onlyChanged(keys) {
+      return request.resource.data.diff(resource.data).affectedKeys().hasOnly(keys);
+    }
+
+    // Despachadores autorizados (id = correo de Google)
+    match /admins/{email} {
+      allow read: if isAdmin() || (signed() && request.auth.token.email == email);
+      allow write: if isAdmin();
+    }
+
+    // Perfil de cada domiciliario (id = uid de su cuenta)
+    match /doms/{id} {
+      allow read: if isAdmin() || (signed() && uid() == id);
+      allow write: if isAdmin();
+      allow update: if signed() && uid() == id
+        && onlyChanged(['token', 'visto', 'app', 'disponible']);
+    }
+
+    // Servicios
+    match /servicios/{id} {
+      allow read: if isAdmin() || (signed() && (
+        uid() in resource.data.candUids || resource.data.domUid == uid()));
+      allow create, delete: if isAdmin();
+      allow update: if isAdmin() || (signed() && (
+        // Aceptar una oferta: el primero que llegue
+        (resource.data.estado == 'Ofertado'
+          && uid() in resource.data.candUids
+          && request.resource.data.estado == 'Aceptado'
+          && request.resource.data.domUid == uid()
+          && onlyChanged(['estado', 'domUid', 'dom', 't', 'historial', 'upd']))
+        ||
+        // Iniciar y finalizar: solo quien tiene el servicio
+        (resource.data.domUid == uid()
+          && request.resource.data.domUid == uid()
+          && ((resource.data.estado == 'Aceptado' && request.resource.data.estado == 'En curso')
+            || (resource.data.estado == 'En curso' && request.resource.data.estado == 'Finalizado'))
+          && onlyChanged(['estado', 't', 'historial', 'upd', 'esperaDom', 'notaDom']))
+        ||
+        // Rechazar una oferta (queda registrado, no cambia el estado)
+        (resource.data.estado == 'Ofertado'
+          && uid() in resource.data.candUids
+          && request.resource.data.estado == 'Ofertado'
+          && onlyChanged(['rechazos', 'upd']))
+      ));
+    }
+
+    // Todo lo demás (proveedores, tarifas, cortes, configuración): solo despacho
+    match /{document=**} {
+      allow read, write: if isAdmin();
+    }
+  }
+}
