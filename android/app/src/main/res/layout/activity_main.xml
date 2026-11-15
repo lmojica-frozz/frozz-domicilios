@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:orientation="vertical" android:background="@color/fondo">
+
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent" android:layout_height="?attr/actionBarSize"
+        android:background="@color/frozz"
+        android:theme="@style/ThemeOverlay.Material3.Dark.ActionBar" />
+
+    <TextView
+        android:id="@+id/estado"
+        android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:background="#D6E6F5" android:paddingHorizontal="16dp" android:paddingVertical="6dp"
+        android:text="Conectando…" android:textColor="@color/frozz_osc" android:textSize="13sp" />
+
+    <LinearLayout
+        android:id="@+id/bannerBateria"
+        android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:background="@color/aviso" android:orientation="vertical"
+        android:padding="12dp" android:visibility="gone">
+        <TextView
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:text="Para que le suenen los servicios con el celular bloqueado, permita que la app funcione en segundo plano."
+            android:textColor="@color/texto" />
+        <Button
+            android:id="@+id/btnBateria"
+            style="@style/Widget.Material3.Button.TextButton"
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text="Permitir" />
+    </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1">
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/lista"
+            android:layout_width="match_parent" android:layout_height="match_parent"
+            android:clipToPadding="false" android:padding="10dp" />
+        <TextView
+            android:id="@+id/vacio"
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:layout_gravity="center" android:gravity="center" android:padding="32dp"
+            android:text="No tiene servicios pendientes.\nCuando el despacho le envíe uno, el celular sonará."
+            android:textColor="@color/suave" android:visibility="gone" />
+    </FrameLayout>
+</LinearLayout>

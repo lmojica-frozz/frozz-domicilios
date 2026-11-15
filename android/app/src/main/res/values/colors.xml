@@ -1,0 +1,11 @@
+<resources>
+    <color name="frozz">#0B4F8A</color>
+    <color name="frozz_osc">#083A66</color>
+    <color name="acento">#1FA463</color>
+    <color name="fondo">#EEF2F6</color>
+    <color name="tarjeta">#FFFFFF</color>
+    <color name="texto">#14212E</color>
+    <color name="suave">#5B6B7B</color>
+    <color name="aviso">#FFF4D6</color>
+    <color name="icono_fondo">#0B4F8A</color>
+</resources>

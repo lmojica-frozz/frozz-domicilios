@@ -1,0 +1,10 @@
+<resources>
+    <style name="Theme.Frozz" parent="Theme.Material3.Light.NoActionBar">
+        <item name="colorPrimary">@color/frozz</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorPrimaryContainer">#D6E6F5</item>
+        <item name="colorSecondary">@color/acento</item>
+        <item name="android:windowBackground">@color/fondo</item>
+        <item name="android:statusBarColor">@color/frozz_osc</item>
+    </style>
+</resources>
