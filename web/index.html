@@ -1108,7 +1108,7 @@ renderAll();renderEnl();renderProg();loadGeo().then(ok=>{if(ok)renderAll();});up
  const u=await fbLogin();const db=firebase.firestore();const mcp=null;S.db=db;S.mcp=null;S.uid=u.uid;if(u.displayName&&!$('#inSolic').value)$('#inSolic').value=u.displayName;
  db.collection('doms').onSnapshot(q=>{S.cuentas=new Map(q.docs.map(d=>[d.id,d.data()]));renderAll();},e=>console.warn('doms',e));
  if(db){chip('#chipDb','wait','Registro: cargando…');let first=true;const tm=setTimeout(()=>{if(first)chip('#chipDb','err','Registro: sin respuesta');},10000);
-  db.doc('config/maestro').get().then(s=>{if(s.exists&&!S.maestro){const d=s.data();applyMaestro(d,'copia guardada',d.at);if(S.driveState!=='ok')chip('#chipDrive','wait','Drive: usando copia del '+fdt(d.at));}}).catch(()=>{});
+  db.doc('config/maestro').get().then(s=>{if(s.exists&&!S.maestro){const d=s.data();applyMaestro(d,'copia guardada',d.at);chip('#chipDrive','ok','Excel: cargado el '+fdt(d.at));}}).catch(()=>{});
   db.collection('servicios').orderBy('creado','desc').limit(1000).onSnapshot(q=>{q.docs.forEach(d=>{S.serv.set(d.id,{...d.data(),id:d.id});});q.docChanges().forEach(c=>{if(c.type==='removed')S.serv.delete(c.doc.id);});
     if(!q.metadata.fromCache){first=false;clearTimeout(tm);chip('#chipDb','ok','Registro: '+S.serv.size+' servicios');}autoValor();renderServ();renderCorte();renderDoms();if($('.view.on').id==='v-servicios')renderRoute();},
    e=>{clearTimeout(tm);chip('#chipDb','err','Registro: '+(e.code==='revoked'?'acceso retirado':'error'));});
