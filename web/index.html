@@ -440,7 +440,7 @@ function parseWB(wb){
  const par={};rows('Parametros').forEach(r=>{const k=String(g(r,'Parametro')).trim();if(k)par[k]=g(r,'Valor');});
  if(!lug.length&&!dom.length&&!tar.length)throw new Error('El archivo no tiene las hojas Proveedores, Domiciliarios y Tarifas');
  return{lugares:lug,doms:dom,tarifas:tar,P:par};}
-function applyMaestro(m,fuente,at){S.lugBase=m.lugares||[];rebuildLug();S.domBase=m.doms||[];S.tarifas=m.tarifas||[];rebuildDoms();S.P=m.P||{};S.maestro={fuente,at};
+function applyMaestro(m,fuente,at){S.lugBase=m.lugares||[];rebuildLug();S.domBase=m.doms||[];S.tarifas=m.tarifas||[];rebuildDoms();S.P=m.P||{};S.maestro={fuente,at};try{chip('#chipDrive','ok','Excel: '+(m.lugares||[]).length+' lugares · '+(m.doms||[]).length+' domiciliarios');}catch(e){}
  if(!S.tarifas.some(t=>t.veh===S.sel.veh))S.sel.veh=S.tarifas[0]?.veh||'';renderAll();fitLugares();}
 function findB64(o,depth=0){if(depth>6||o==null)return null;if(typeof o==='string'){return o.startsWith('UEsDB')?o:null;}
  if(Array.isArray(o)){for(const x of o){const r=findB64(x,depth+1);if(r)return r;}return null;}
